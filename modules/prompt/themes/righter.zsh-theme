@@ -130,18 +130,28 @@ prompt_eriner_main() {
 
 ## Right Prompt
 prompt_eriner_right() {
-  prompt_git
+  vcs_info
+  RPROMPT="%{%f%b%k%}$(prompt_git)"
+  zle reset-prompt
+#  async_stop_worker right_prompt
+#  async_flush_jobs
 }
 
 prompt_eriner_precmd() {
-  vcs_info
   PROMPT='%{%f%b%k%}$(prompt_eriner_main) '
-  RPROMPT='%{%f%b%k%}$(prompt_eriner_right)'
+
+  async_start_worker right_prompt
+  async_register_callback right_prompt prompt_eriner_right
+  async_job right_prompt echo ""
 }
 
 prompt_eriner_setup() {
   autoload -Uz add-zsh-hook
   autoload -Uz vcs_info
+
+  source ~/.zim/modules/prompt/functions/async
+
+  async_init
 
   prompt_opts=(cr subst percent)
 
