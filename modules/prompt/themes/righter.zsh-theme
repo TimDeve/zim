@@ -75,6 +75,8 @@ prompt_context() {
 
 # Git: branch/detached head, dirty status
 prompt_git() {
+  vcs_info
+
   local color ref
   is_dirty() {
     test -n "$(command git status --porcelain --ignore-submodules)"
@@ -130,7 +132,6 @@ prompt_eriner_main() {
 
 ## Right Prompt
 prompt_eriner_right() {
-  vcs_info
   RPROMPT="%{%f%b%k%}$(prompt_git)"
   zle reset-prompt
 #  async_stop_worker right_prompt
